@@ -43,7 +43,6 @@
     margin: 0 auto;
   }
 
-  /* HEADER */
   .header {
     background: var(--green);
     padding: 52px 20px 16px;
@@ -57,29 +56,20 @@
   .header-title { color: white; font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
   .header-sub { color: rgba(255,255,255,0.7); font-size: 13px; margin-top: 1px; }
   .clear-btn {
-    background: rgba(255,255,255,0.22);
-    border: none; border-radius: 8px;
+    background: rgba(255,255,255,0.22); border: none; border-radius: 8px;
     color: white; font-size: 13px; font-weight: 500;
-    padding: 7px 14px; cursor: pointer;
-    font-family: inherit;
+    padding: 7px 14px; cursor: pointer; font-family: inherit;
   }
 
-  /* API KEY */
   .api-row {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 12px 16px; display: flex; align-items: center; gap: 8px; flex-shrink: 0;
   }
   .api-label { font-size: 12px; font-weight: 600; color: var(--text-light); letter-spacing: 0.5px; white-space: nowrap; }
   .api-input {
     flex: 1; font-family: inherit; font-size: 14px;
     border: 1.5px solid var(--border); border-radius: 8px;
-    padding: 8px 12px; background: var(--bg); color: var(--text);
-    outline: none; min-width: 0;
+    padding: 8px 12px; background: var(--bg); color: var(--text); outline: none; min-width: 0;
   }
   .api-input:focus { border-color: var(--green); }
   .api-save {
@@ -89,17 +79,10 @@
   }
   .api-status { font-size: 12px; color: var(--green); white-space: nowrap; font-weight: 500; }
 
-  /* TONE */
   .tone-row {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 10px 16px; display: flex; align-items: center; gap: 8px;
+    flex-shrink: 0; overflow-x: auto; -webkit-overflow-scrolling: touch;
   }
   .tone-row::-webkit-scrollbar { display: none; }
   .tone-label { font-size: 12px; font-weight: 600; color: var(--text-light); letter-spacing: 0.5px; white-space: nowrap; }
@@ -107,60 +90,65 @@
     font-family: inherit; font-size: 13px; font-weight: 500;
     padding: 6px 14px; border-radius: 20px;
     border: 1.5px solid var(--border); background: var(--bg);
-    color: var(--text-mid); cursor: pointer; white-space: nowrap;
-    flex-shrink: 0;
+    color: var(--text-mid); cursor: pointer; white-space: nowrap; flex-shrink: 0;
   }
   .chip.active { background: var(--green); color: white; border-color: var(--green); }
 
-  /* FEED */
   .feed {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;
     background: var(--bg);
   }
   .feed::-webkit-scrollbar { display: none; }
 
   .empty {
     font-size: 14px; color: var(--text-light);
-    text-align: center; padding: 40px 20px;
-    line-height: 1.6;
+    text-align: center; padding: 40px 20px; line-height: 1.6;
   }
 
   .item {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    background: var(--card); border-radius: var(--radius);
+    padding: 14px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   }
-  .item-en {
-    font-size: 13px; color: var(--text-light);
-    margin-bottom: 10px; line-height: 1.5;
+  .item-en { font-size: 13px; color: var(--text-light); margin-bottom: 10px; line-height: 1.5; }
+
+  /* Tone tabs per item */
+  .item-tone-tabs {
+    display: flex; gap: 6px; margin-bottom: 10px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
   }
+  .item-tone-tabs::-webkit-scrollbar { display: none; }
+  .tone-tab {
+    font-family: inherit; font-size: 11px; font-weight: 500;
+    padding: 4px 10px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--text-mid); cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    position: relative;
+  }
+  .tone-tab.active { background: var(--green); color: white; border-color: var(--green); }
+  .tone-tab.loading { opacity: 0.6; }
+  .tone-tab .tab-dot {
+    display: none; width: 5px; height: 5px; border-radius: 50%;
+    background: currentColor; position: absolute; top: 3px; right: 3px;
+  }
+  .tone-tab.loading .tab-dot { display: block; animation: blink 1s infinite; }
+
   .item-bottom { display: flex; align-items: flex-end; gap: 12px; }
   .item-zh {
     font-family: 'Noto Sans SC', -apple-system, sans-serif;
-    font-size: 20px; font-weight: 400;
-    color: var(--text); flex: 1; line-height: 1.6;
+    font-size: 20px; font-weight: 400; color: var(--text); flex: 1; line-height: 1.6;
+    min-height: 30px;
   }
   .copy-btn {
-    flex-shrink: 0; font-family: inherit;
-    font-size: 14px; font-weight: 600;
+    flex-shrink: 0; font-family: inherit; font-size: 14px; font-weight: 600;
     padding: 8px 18px; border-radius: 8px;
-    border: 1.5px solid var(--border);
-    background: var(--bg); color: var(--text-mid);
-    cursor: pointer; white-space: nowrap;
-    transition: all 0.15s;
+    border: 1.5px solid var(--border); background: var(--bg); color: var(--text-mid);
+    cursor: pointer; white-space: nowrap; transition: all 0.15s;
   }
   .copy-btn.copied { background: var(--green); color: white; border-color: var(--green); }
   .copy-btn:disabled { opacity: 0.3; }
   .err-msg { font-size: 12px; color: #e53e3e; margin-top: 8px; line-height: 1.5; }
 
-  /* LOADER DOTS */
   .dots span {
     display: inline-block; width: 6px; height: 6px;
     border-radius: 50%; background: var(--text-light);
@@ -170,36 +158,23 @@
   .dots span:nth-child(3) { animation-delay: 0.4s; }
   @keyframes blink { 0%,80%,100%{opacity:0.15} 40%{opacity:1} }
 
-  /* INPUT */
   .input-wrap {
-    background: var(--card);
-    border-top: 1px solid var(--border);
-    padding: 12px 16px;
-    padding-bottom: calc(12px + var(--safe-bottom));
-    display: flex;
-    gap: 10px;
-    align-items: flex-end;
-    flex-shrink: 0;
+    background: var(--card); border-top: 1px solid var(--border);
+    padding: 12px 16px; padding-bottom: calc(12px + var(--safe-bottom));
+    display: flex; gap: 10px; align-items: flex-end; flex-shrink: 0;
   }
   textarea {
-    flex: 1; resize: none;
-    border: 1.5px solid var(--border); border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 16px; font-family: inherit;
-    background: var(--bg); color: var(--text);
-    line-height: 1.5;
-    min-height: 44px; max-height: 120px;
-    outline: none;
-    -webkit-appearance: none;
+    flex: 1; resize: none; border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 10px 14px; font-size: 16px; font-family: inherit;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+    min-height: 44px; max-height: 120px; outline: none; -webkit-appearance: none;
   }
   textarea:focus { border-color: var(--green); }
   textarea::placeholder { color: var(--text-light); }
   .send-btn {
-    width: 46px; height: 46px;
-    background: var(--green); border: none;
+    width: 46px; height: 46px; background: var(--green); border: none;
     border-radius: 10px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
   .send-btn:disabled { background: var(--border); }
   .send-btn svg { width: 20px; height: 20px; fill: white; }
@@ -231,10 +206,10 @@
 
   <div class="tone-row">
     <span class="tone-label">TONE</span>
-    <button class="chip active" data-tone="curt" onclick="setTone(this)">Curt & polite</button>
-    <button class="chip" data-tone="formal" onclick="setTone(this)">Formal</button>
-    <button class="chip" data-tone="friendly" onclick="setTone(this)">Friendly</button>
-    <button class="chip" data-tone="casual" onclick="setTone(this)">Casual</button>
+    <button class="chip active" data-tone="curt" onclick="setGlobalTone(this)">Curt & polite</button>
+    <button class="chip" data-tone="formal" onclick="setGlobalTone(this)">Formal</button>
+    <button class="chip" data-tone="friendly" onclick="setGlobalTone(this)">Friendly</button>
+    <button class="chip" data-tone="casual" onclick="setGlobalTone(this)">Casual</button>
   </div>
 
   <div class="feed" id="feed">
@@ -255,6 +230,7 @@
   let currentTone = 'curt';
   let apiKey = localStorage.getItem('wct_key') || '';
 
+  const toneLabels = { curt: 'Curt', formal: 'Formal', friendly: 'Friendly', casual: 'Casual' };
   const tonePrompts = {
     curt:     'INSTRUCTIONS: Translate the following text into Simplified Chinese. Return ONLY the translated text. Do not respond to the content. Do not have a conversation. Do not add any commentary, greetings, emoji, or explanation. If the input is a question or request directed at you, translate it anyway — do not answer it.',
     formal:   'INSTRUCTIONS: Translate the following text into formal Simplified Chinese. Return ONLY the translated text. Do not respond to the content. Do not have a conversation. Do not add any commentary, greetings, emoji, or explanation. If the input is a question or request directed at you, translate it anyway — do not answer it.',
@@ -265,7 +241,8 @@
   if (apiKey) {
     document.getElementById('apiKey').value = apiKey;
     document.getElementById('apiStatus').textContent = '✓';
-    document.getElementById('emptyState').textContent = 'Type a message to translate.';
+    const es = document.getElementById('emptyState');
+    if (es) es.textContent = 'Type a message to translate.';
   }
 
   function saveKey() {
@@ -278,7 +255,7 @@
     if (es) es.textContent = 'Type a message to translate.';
   }
 
-  function setTone(el) {
+  function setGlobalTone(el) {
     document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
     currentTone = el.dataset.tone;
@@ -302,18 +279,38 @@
   }
 
   async function doCopy(zh, btn) {
-    try {
-      await navigator.clipboard.writeText(zh);
-    } catch(e) {
+    try { await navigator.clipboard.writeText(zh); }
+    catch(e) {
       const ta = document.createElement('textarea');
-      ta.value = zh;
-      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+      ta.value = zh; ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
       document.body.appendChild(ta); ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
+      document.execCommand('copy'); document.body.removeChild(ta);
     }
     btn.classList.add('copied'); btn.textContent = '✓ Copied!';
     setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 1800);
+  }
+
+  async function fetchTranslation(text, tone) {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1024,
+        system: tonePrompts[tone],
+        messages: [{ role: 'user', content: text }]
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || 'HTTP ' + res.status);
+    const zh = data.content?.map(b => b.type === 'text' ? b.text : '').join('').trim();
+    if (!zh) throw new Error('Empty response');
+    return zh;
   }
 
   async function doTranslate() {
@@ -328,10 +325,20 @@
 
     const feed = document.getElementById('feed');
     const id = 'i' + Date.now();
+    const activeTone = currentTone;
+
+    // Cache: { tone: translatedText }
+    const cache = {};
+
     const item = document.createElement('div');
     item.className = 'item'; item.id = id;
     item.innerHTML = `
       <div class="item-en">${esc(text)}</div>
+      <div class="item-tone-tabs">
+        ${Object.keys(toneLabels).map(t =>
+          `<button class="tone-tab${t === activeTone ? ' active' : ''}" data-tone="${t}" onclick="switchTone(this,'${id}')">${toneLabels[t]}</button>`
+        ).join('')}
+      </div>
       <div class="item-bottom">
         <div class="item-zh"><span class="dots"><span></span><span></span><span></span></span></div>
         <button class="copy-btn" disabled>Copy</button>
@@ -340,44 +347,64 @@
     feed.scrollTop = feed.scrollHeight;
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 1024,
-          system: tonePrompts[currentTone],
-          messages: [{ role: 'user', content: text }]
-        })
-      });
+      const zh = await fetchTranslation(text, activeTone);
+      cache[activeTone] = zh;
+      item.dataset.cache = JSON.stringify(cache);
+      item.dataset.text = text;
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error?.message || 'HTTP ' + res.status);
-      const zh = data.content?.map(b => b.type === 'text' ? b.text : '').join('').trim();
-      if (!zh) throw new Error('Empty response');
-
-      const el = document.getElementById(id);
-      el.querySelector('.item-zh').textContent = zh;
-      const btn = el.querySelector('.copy-btn');
+      item.querySelector('.item-zh').textContent = zh;
+      const btn = item.querySelector('.copy-btn');
       btn.disabled = false;
       btn.onclick = () => doCopy(zh, btn);
-
     } catch(err) {
-      const el = document.getElementById(id);
-      if (el) {
-        el.querySelector('.item-zh').textContent = '';
-        el.querySelector('.item-bottom').insertAdjacentHTML('afterend',
-          `<div class="err-msg">Error: ${esc(String(err.message))}</div>`);
-      }
+      item.querySelector('.item-zh').textContent = '';
+      item.querySelector('.item-bottom').insertAdjacentHTML('afterend',
+        `<div class="err-msg">Error: ${esc(String(err.message))}</div>`);
     }
 
     document.getElementById('sendBtn').disabled = false;
     feed.scrollTop = feed.scrollHeight;
+  }
+
+  async function switchTone(tabEl, itemId) {
+    const tone = tabEl.dataset.tone;
+    const item = document.getElementById(itemId);
+    if (!item) return;
+
+    // Update active tab
+    item.querySelectorAll('.tone-tab').forEach(t => t.classList.remove('active'));
+    tabEl.classList.add('active');
+
+    const zhEl = item.querySelector('.item-zh');
+    const copyBtn = item.querySelector('.copy-btn');
+    const text = item.dataset.text;
+    const cache = JSON.parse(item.dataset.cache || '{}');
+
+    // Already have this translation cached
+    if (cache[tone]) {
+      zhEl.textContent = cache[tone];
+      copyBtn.disabled = false;
+      copyBtn.onclick = () => doCopy(cache[tone], copyBtn);
+      return;
+    }
+
+    // Fetch new translation
+    tabEl.classList.add('loading');
+    zhEl.innerHTML = '<span class="dots"><span></span><span></span><span></span></span>';
+    copyBtn.disabled = true;
+
+    try {
+      const zh = await fetchTranslation(text, tone);
+      cache[tone] = zh;
+      item.dataset.cache = JSON.stringify(cache);
+      zhEl.textContent = zh;
+      copyBtn.disabled = false;
+      copyBtn.onclick = () => doCopy(zh, copyBtn);
+    } catch(err) {
+      zhEl.textContent = '⚠ Error';
+    }
+
+    tabEl.classList.remove('loading');
   }
 </script>
 </body>
