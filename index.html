@@ -199,7 +199,7 @@
 
   <div class="api-row">
     <span class="api-label">API KEY</span>
-    <input type="password" class="api-input" id="apiKey" placeholder="sk-ant-..." autocomplete="off" />
+    <input type="password" class="api-input" id="apiKey" placeholder="AIzaSy..." autocomplete="off" />
     <button class="api-save" onclick="saveKey()">Save</button>
     <span class="api-status" id="apiStatus"></span>
   </div>
@@ -213,7 +213,7 @@
   </div>
 
   <div class="feed" id="feed">
-    <div class="empty" id="emptyState">Paste your API key above,<br>then type to translate.</div>
+    <div class="empty" id="emptyState">Paste your Gemini API key above,<br>then type to translate.</div>
   </div>
 
   <div class="input-wrap">
@@ -291,24 +291,27 @@
   }
 
   async function fetchTranslation(text, tone) {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+    const res = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1024,
-        system: tonePrompts[tone],
-        messages: [{ role: 'user', content: text }]
+        systemInstruction: {
+          parts: [{ text: tonePrompts[tone] }]
+        },
+        contents: [
+          {
+            parts: [{ text: text }]
+          }
+        ]
       })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error?.message || 'HTTP ' + res.status);
-    const zh = data.content?.map(b => b.type === 'text' ? b.text : '').join('').trim();
+    
+    const zh = data.candidates?.[0]?.content?.parts?.map(p => p.text).join('').trim();
     if (!zh) throw new Error('Empty response');
     return zh;
   }
