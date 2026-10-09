@@ -1,417 +1,207 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="WeChat TL">
-<title>WeChat Translator</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
-
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  :root {
-    --green: #07c160;
-    --green-dark: #06ae56;
-    --bg: #f5f5f5;
-    --card: #ffffff;
-    --border: #e8e8e8;
-    --text: #111111;
-    --text-mid: #666666;
-    --text-light: #aaaaaa;
-    --radius: 14px;
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-  }
-
-  html, body {
-    height: 100%;
-    background: var(--bg);
-    font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
-    font-size: 16px;
-    color: var(--text);
-    overflow: hidden;
-  }
-
-  .app {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    height: 100dvh;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
-  .header {
-    background: var(--green);
-    padding: 52px 20px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-  }
-  .header-left { display: flex; align-items: center; gap: 10px; }
-  .header-icon { width: 32px; height: 32px; fill: white; flex-shrink: 0; }
-  .header-title { color: white; font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
-  .header-sub { color: rgba(255,255,255,0.7); font-size: 13px; margin-top: 1px; }
-  .clear-btn {
-    background: rgba(255,255,255,0.22); border: none; border-radius: 8px;
-    color: white; font-size: 13px; font-weight: 500;
-    padding: 7px 14px; cursor: pointer; font-family: inherit;
-  }
-
-  .api-row {
-    background: var(--card); border-bottom: 1px solid var(--border);
-    padding: 12px 16px; display: flex; align-items: center; gap: 8px; flex-shrink: 0;
-  }
-  .api-label { font-size: 12px; font-weight: 600; color: var(--text-light); letter-spacing: 0.5px; white-space: nowrap; }
-  .api-input {
-    flex: 1; font-family: inherit; font-size: 14px;
-    border: 1.5px solid var(--border); border-radius: 8px;
-    padding: 8px 12px; background: var(--bg); color: var(--text); outline: none; min-width: 0;
-  }
-  .api-input:focus { border-color: var(--green); }
-  .api-save {
-    font-family: inherit; font-size: 13px; font-weight: 600;
-    background: var(--green); color: white; border: none;
-    border-radius: 8px; padding: 8px 14px; cursor: pointer; white-space: nowrap;
-  }
-  .api-status { font-size: 12px; color: var(--green); white-space: nowrap; font-weight: 500; }
-
-  .tone-row {
-    background: var(--card); border-bottom: 1px solid var(--border);
-    padding: 10px 16px; display: flex; align-items: center; gap: 8px;
-    flex-shrink: 0; overflow-x: auto; -webkit-overflow-scrolling: touch;
-  }
-  .tone-row::-webkit-scrollbar { display: none; }
-  .tone-label { font-size: 12px; font-weight: 600; color: var(--text-light); letter-spacing: 0.5px; white-space: nowrap; }
-  .chip {
-    font-family: inherit; font-size: 13px; font-weight: 500;
-    padding: 6px 14px; border-radius: 20px;
-    border: 1.5px solid var(--border); background: var(--bg);
-    color: var(--text-mid); cursor: pointer; white-space: nowrap; flex-shrink: 0;
-  }
-  .chip.active { background: var(--green); color: white; border-color: var(--green); }
-
-  .feed {
-    flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
-    padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;
-    background: var(--bg);
-  }
-  .feed::-webkit-scrollbar { display: none; }
-
-  .empty {
-    font-size: 14px; color: var(--text-light);
-    text-align: center; padding: 40px 20px; line-height: 1.6;
-  }
-
-  .item {
-    background: var(--card); border-radius: var(--radius);
-    padding: 14px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  }
-  .item-en { font-size: 13px; color: var(--text-light); margin-bottom: 10px; line-height: 1.5; }
-
-  /* Tone tabs per item */
-  .item-tone-tabs {
-    display: flex; gap: 6px; margin-bottom: 10px;
-    overflow-x: auto; -webkit-overflow-scrolling: touch;
-  }
-  .item-tone-tabs::-webkit-scrollbar { display: none; }
-  .tone-tab {
-    font-family: inherit; font-size: 11px; font-weight: 500;
-    padding: 4px 10px; border-radius: 20px;
-    border: 1px solid var(--border); background: var(--bg);
-    color: var(--text-mid); cursor: pointer; white-space: nowrap; flex-shrink: 0;
-    position: relative;
-  }
-  .tone-tab.active { background: var(--green); color: white; border-color: var(--green); }
-  .tone-tab.loading { opacity: 0.6; }
-  .tone-tab .tab-dot {
-    display: none; width: 5px; height: 5px; border-radius: 50%;
-    background: currentColor; position: absolute; top: 3px; right: 3px;
-  }
-  .tone-tab.loading .tab-dot { display: block; animation: blink 1s infinite; }
-
-  .item-bottom { display: flex; align-items: flex-end; gap: 12px; }
-  .item-zh {
-    font-family: 'Noto Sans SC', -apple-system, sans-serif;
-    font-size: 20px; font-weight: 400; color: var(--text); flex: 1; line-height: 1.6;
-    min-height: 30px;
-  }
-  .copy-btn {
-    flex-shrink: 0; font-family: inherit; font-size: 14px; font-weight: 600;
-    padding: 8px 18px; border-radius: 8px;
-    border: 1.5px solid var(--border); background: var(--bg); color: var(--text-mid);
-    cursor: pointer; white-space: nowrap; transition: all 0.15s;
-  }
-  .copy-btn.copied { background: var(--green); color: white; border-color: var(--green); }
-  .copy-btn:disabled { opacity: 0.3; }
-  .err-msg { font-size: 12px; color: #e53e3e; margin-top: 8px; line-height: 1.5; }
-
-  .dots span {
-    display: inline-block; width: 6px; height: 6px;
-    border-radius: 50%; background: var(--text-light);
-    animation: blink 1.2s infinite; margin: 0 2px;
-  }
-  .dots span:nth-child(2) { animation-delay: 0.2s; }
-  .dots span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes blink { 0%,80%,100%{opacity:0.15} 40%{opacity:1} }
-
-  .input-wrap {
-    background: var(--card); border-top: 1px solid var(--border);
-    padding: 12px 16px; padding-bottom: calc(12px + var(--safe-bottom));
-    display: flex; gap: 10px; align-items: flex-end; flex-shrink: 0;
-  }
-  textarea {
-    flex: 1; resize: none; border: 1.5px solid var(--border); border-radius: 10px;
-    padding: 10px 14px; font-size: 16px; font-family: inherit;
-    background: var(--bg); color: var(--text); line-height: 1.5;
-    min-height: 44px; max-height: 120px; outline: none; -webkit-appearance: none;
-  }
-  textarea:focus { border-color: var(--green); }
-  textarea::placeholder { color: var(--text-light); }
-  .send-btn {
-    width: 46px; height: 46px; background: var(--green); border: none;
-    border-radius: 10px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .send-btn:disabled { background: var(--border); }
-  .send-btn svg { width: 20px; height: 20px; fill: white; }
-</style>
-</head>
-<body>
-<div class="app">
-
-  <div class="header">
-    <div class="header-left">
-      <svg class="header-icon" viewBox="0 0 24 24">
-        <path d="M9.5 4C5.36 4 2 6.92 2 10.5c0 2.05 1.1 3.87 2.82 5.07L4 18l-1.25c.94.27 1.94.5 3 .5C9.2 17 9 16.26 9 15.5 9 11.36 12.86 8 17.5 8c.18 0 .34.01.5.02C17.12 5.67 13.59 4 9.5 4z"/>
-        <path d="M17.5 10c-3.31 0-6 2.24-6 5s2.69 5 6 5c.87 0 1.7-.18 2.44-.5L22 21l-.75-2.63C22.37 17.37 23 16.26 23 15c0-2.76-2.69-5-5.5-5z"/>
-      </svg>
-      <div>
-        <div class="header-title">WeChat Translator</div>
-        <div class="header-sub">English → Simplified Chinese</div>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#183B33" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Saylo" />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src https://generativelanguage.googleapis.com; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <title>Saylo · Your words, understood</title>
+    <link rel="icon" href="./favicon.png" />
+    <link rel="apple-touch-icon" href="./icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="./"
+        ><img src="./icon.png" alt="" width="36" height="36" /><span
+          >saylo<span class="dot">.</span></span
+        ></a
+      ><button id="settings-open" class="plain">API settings</button>
+    </header>
+    <main>
+      <div class="intro">
+        <span class="eyebrow">YOUR POCKET CHAT TRANSLATOR</span>
+        <h1>Same message.<br /><span>Your kind of tone.</span></h1>
+        <p>Paste it. Find the right words. Make them yours.</p>
       </div>
-    </div>
-    <button class="clear-btn" onclick="clearAll()">Clear</button>
-  </div>
-
-  <div class="api-row">
-    <span class="api-label">API KEY</span>
-    <input type="password" class="api-input" id="apiKey" placeholder="AIzaSy..." autocomplete="off" />
-    <button class="api-save" onclick="saveKey()">Save</button>
-    <span class="api-status" id="apiStatus"></span>
-  </div>
-
-  <div class="tone-row">
-    <span class="tone-label">TONE</span>
-    <button class="chip active" data-tone="curt" onclick="setGlobalTone(this)">Curt & polite</button>
-    <button class="chip" data-tone="formal" onclick="setGlobalTone(this)">Formal</button>
-    <button class="chip" data-tone="friendly" onclick="setGlobalTone(this)">Friendly</button>
-    <button class="chip" data-tone="casual" onclick="setGlobalTone(this)">Casual</button>
-  </div>
-
-  <div class="feed" id="feed">
-    <div class="empty" id="emptyState">Paste your Gemini API key above,<br>then type to translate.</div>
-  </div>
-
-  <div class="input-wrap">
-    <textarea id="inp" placeholder="Type in English…" rows="1"
-      onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-    <button class="send-btn" id="sendBtn" onclick="doTranslate()">
-      <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
-    </button>
-  </div>
-
-</div>
-
-<script>
-  let currentTone = 'curt';
-  let apiKey = localStorage.getItem('wct_key') || '';
-
-  const toneLabels = { curt: 'Curt', formal: 'Formal', friendly: 'Friendly', casual: 'Casual' };
-  const tonePrompts = {
-    curt:     'INSTRUCTIONS: Translate the following text into Simplified Chinese in a polite but concise, direct manner. Return ONLY the translated text. Do not respond to the content. Do not have a conversation. Do not add any commentary, greetings, emoji, or explanation.',
-    formal:   'INSTRUCTIONS: Translate the following text into formal Simplified Chinese. Return ONLY the translated text. Do not respond to the content. Do not have a conversation. Do not add any commentary, greetings, emoji, or explanation.',
-    friendly: 'INSTRUCTIONS: Translate the following text into friendly Simplified Chinese. Return ONLY the translated text. Do not respond to the content. Do not have a conversation. Do not add any commentary, greetings, emoji, or explanation.',
-    casual:   'INSTRUCTIONS: Translate the following text into casual Simplified Chinese. Return ONLY the translated text. Do not respond to the content. Do not have a conversation. Do not add any commentary, greetings, emoji, or explanation.'
-  };
-
-  if (apiKey) {
-    document.getElementById('apiKey').value = apiKey;
-    document.getElementById('apiStatus').textContent = '✓';
-    const es = document.getElementById('emptyState');
-    if (es) es.textContent = 'Type a message to translate.';
-  }
-
-  function saveKey() {
-    const val = document.getElementById('apiKey').value.trim();
-    if (!val) return;
-    apiKey = val;
-    localStorage.setItem('wct_key', val);
-    document.getElementById('apiStatus').textContent = '✓';
-    const es = document.getElementById('emptyState');
-    if (es) es.textContent = 'Type a message to translate.';
-  }
-
-  function setGlobalTone(el) {
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    el.classList.add('active');
-    currentTone = el.dataset.tone;
-  }
-
-  function autoResize(el) {
-    el.style.height = 'auto';
-    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-  }
-
-  function handleKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doTranslate(); }
-  }
-
-  function clearAll() {
-    document.getElementById('feed').innerHTML = '<div class="empty" id="emptyState">Type a message to translate.</div>';
-  }
-
-  function esc(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-
-  async function doCopy(zh, btn) {
-    try { await navigator.clipboard.writeText(zh); }
-    catch(e) {
-      const ta = document.createElement('textarea');
-      ta.value = zh; ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
-      document.body.appendChild(ta); ta.select();
-      document.execCommand('copy'); document.body.removeChild(ta);
-    }
-    btn.classList.add('copied'); btn.textContent = '✓ Copied!';
-    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 1800);
-  }
-
-  async function fetchTranslation(text, tone) {
-    // Correct model endpoint: gemini-1.5-flash
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-    
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: tonePrompts[tone] }]
-        },
-        contents: [
-          {
-            parts: [{ text: text }]
-          }
-        ]
-      })
-    });
-    
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || 'HTTP ' + res.status);
-    
-    const zh = data.candidates?.[0]?.content?.parts?.map(p => p.text).join('').trim();
-    if (!zh) throw new Error('Empty response');
-    return zh;
-  }
-
-  async function doTranslate() {
-    if (!apiKey) { alert('Please paste your API key and tap Save first.'); return; }
-    const inp = document.getElementById('inp');
-    const text = inp.value.trim();
-    if (!text) return;
-
-    document.getElementById('emptyState')?.remove();
-    inp.value = ''; inp.style.height = 'auto';
-    document.getElementById('sendBtn').disabled = true;
-
-    const feed = document.getElementById('feed');
-    const id = 'i' + Date.now();
-    const activeTone = currentTone;
-
-    // Cache: { tone: translatedText }
-    const cache = {};
-
-    const item = document.createElement('div');
-    item.className = 'item'; item.id = id;
-    item.innerHTML = `
-      <div class="item-en">${esc(text)}</div>
-      <div class="item-tone-tabs">
-        ${Object.keys(toneLabels).map(t =>
-          `<button class="tone-tab${t === activeTone ? ' active' : ''}" data-tone="${t}" onclick="switchTone(this,'${id}')">${toneLabels[t]}</button>`
-        ).join('')}
+      <div id="key-banner" class="notice">
+        One small setup: add your own Gemini key.
+        <button id="setup-key" class="link">Add key</button>
       </div>
-      <div class="item-bottom">
-        <div class="item-zh"><span class="dots"><span></span><span></span><span></span></span></div>
-        <button class="copy-btn" disabled>Copy</button>
-      </div>`;
-    feed.appendChild(item);
-    feed.scrollTop = feed.scrollHeight;
-
-    try {
-      const zh = await fetchTranslation(text, activeTone);
-      cache[activeTone] = zh;
-      item.dataset.cache = JSON.stringify(cache);
-      item.dataset.text = text;
-
-      item.querySelector('.item-zh').textContent = zh;
-      const btn = item.querySelector('.copy-btn');
-      btn.disabled = false;
-      btn.onclick = () => doCopy(zh, btn);
-    } catch(err) {
-      item.querySelector('.item-zh').textContent = '';
-      item.querySelector('.item-bottom').insertAdjacentHTML('afterend',
-        `<div class="err-msg">Error: ${esc(String(err.message))}</div>`);
-    }
-
-    document.getElementById('sendBtn').disabled = false;
-    feed.scrollTop = feed.scrollHeight;
-  }
-
-  async function switchTone(tabEl, itemId) {
-    const tone = tabEl.dataset.tone;
-    const item = document.getElementById(itemId);
-    if (!item) return;
-
-    // Update active tab
-    item.querySelectorAll('.tone-tab').forEach(t => t.classList.remove('active'));
-    tabEl.classList.add('active');
-
-    const zhEl = item.querySelector('.item-zh');
-    const copyBtn = item.querySelector('.copy-btn');
-    const text = item.dataset.text;
-    const cache = JSON.parse(item.dataset.cache || '{}');
-
-    // Already have this translation cached
-    if (cache[tone]) {
-      zhEl.textContent = cache[tone];
-      copyBtn.disabled = false;
-      copyBtn.onclick = () => doCopy(cache[tone], copyBtn);
-      return;
-    }
-
-    // Fetch new translation
-    tabEl.classList.add('loading');
-    zhEl.innerHTML = '<span class="dots"><span></span><span></span><span></span></span>';
-    copyBtn.disabled = true;
-
-    try {
-      const zh = await fetchTranslation(text, tone);
-      cache[tone] = zh;
-      item.dataset.cache = JSON.stringify(cache);
-      zhEl.textContent = zh;
-      copyBtn.disabled = false;
-      copyBtn.onclick = () => doCopy(zh, copyBtn);
-    } catch(err) {
-      zhEl.textContent = '⚠ Error';
-    }
-
-    tabEl.classList.remove('loading');
-  }
-</script>
-</body>
+      <div class="workspace">
+        <section>
+          <div class="section-label"><b>01</b> START WITH YOUR MESSAGE</div>
+          <div class="languages">
+            <label>From<select id="source"></select></label
+            ><button id="swap" class="plain" aria-label="Swap languages">
+              ⇄</button
+            ><label>To<select id="target"></select></label>
+          </div>
+          <div class="input-card">
+            <div class="input-top">
+              <span>YOUR MESSAGE</span>
+              <div>
+                <button id="paste" class="plain">Paste chat</button
+                ><button id="clear" class="plain">Clear</button>
+              </div>
+            </div>
+            <textarea
+              id="input"
+              rows="8"
+              placeholder="Paste a message or an entire chat…&#10;&#10;Names and line breaks stay intact."
+              aria-label="Message to translate"
+            ></textarea>
+            <div class="input-bottom">
+              <button id="sample" class="link">Try an example</button
+              ><span id="count">0 / 5,000</span>
+            </div>
+          </div>
+          <div class="intent">
+            <button id="smart" class="pill selected" aria-pressed="true">
+              Smart intent</button
+            ><button id="literal" class="pill" aria-pressed="false">
+              Literal
+            </button>
+          </div>
+          <p id="intent-help" class="small">
+            Fix clear typos first. Flag uncertain meaning — never guess facts.
+          </p>
+          <button id="translate" class="primary" disabled>
+            Translate message
+          </button>
+          <p id="error" role="alert" class="error" hidden></p>
+          <div id="review"></div>
+        </section>
+        <section>
+          <div class="section-label"><b>02</b> MAKE IT SOUND LIKE YOU</div>
+          <div id="tones" class="tones" aria-label="Translation tone"></div>
+          <p id="tone-description" class="small"></p>
+          <div class="preview">
+            <div class="preview-top">
+              <span id="preview-label">TRANSLATION PREVIEW</span
+              ><button id="compare" class="plain" disabled>
+                Compare tones
+              </button>
+            </div>
+            <p id="provisional" class="error" hidden>
+              Provisional preview — clarify the source detail before copying.
+            </p>
+            <div id="output">
+              <div class="empty">
+                <span class="bubble">“</span>
+                <h2>A little less lost<br />in translation.</h2>
+                <p>
+                  Your translation will appear here.<br />Try a few tones. Find
+                  the one that feels right.
+                </p>
+              </div>
+            </div>
+            <button id="copy-all" class="primary dark" disabled>
+              Copy translation
+            </button>
+            <p class="small center">
+              Ready to paste into WeChat, WhatsApp, or anywhere.
+            </p>
+          </div>
+        </section>
+      </div>
+      <section class="history">
+        <div class="history-top">
+          <h2>Recent translations</h2>
+          <button id="clear-history" class="plain">Clear history</button>
+        </div>
+        <div id="history"></div>
+      </section>
+      <footer>
+        Personal test · Your chat goes directly to Google, not GitHub or
+        Manus.<br />AI can misread intent. Review important messages before
+        sending.
+      </footer>
+    </main>
+    <dialog id="settings">
+      <div class="dialog-top">
+        <h2>Your key. Your device.</h2>
+        <button id="settings-close" class="plain" aria-label="Close settings">
+          Close
+        </button>
+      </div>
+      <p>
+        No account or backend needed. Use a dedicated
+        <a
+          href="https://aistudio.google.com/apikey"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Gemini API key</a
+        >. Your chat and key are sent directly to Google over HTTPS.
+      </p>
+      <label
+        >Gemini API key<input
+          id="api-key"
+          type="password"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Paste your personal Gemini key" /></label
+      ><label class="checkbox"
+        ><input id="remember" type="checkbox" /> Remember key on this
+        device</label
+      >
+      <p class="small">
+        Off by default: the key stays in this tab's memory. If enabled, it is
+        stored unencrypted in this browser. Only use this on your own device.
+        Never commit or share a key.
+      </p>
+      <label
+        >Text model<select id="model">
+          <option value="">Connect key to load available models</option>
+        </select></label
+      >
+      <div class="dialog-actions">
+        <button id="connect-key" class="primary">
+          Connect key & load models</button
+        ><button id="forget-key" class="plain">Forget key</button>
+      </div>
+      <p id="settings-status" role="status" class="small"></p>
+      <label class="checkbox"
+        ><input id="keep-history" type="checkbox" checked /> Save recent
+        translations on this device</label
+      >
+      <p class="small">
+        No cloud history. Turning this off clears local history. An API call may
+        consume your Google's quota or incur charges. Check usage in Google AI
+        Studio.
+      </p>
+      <hr />
+      <p class="small">
+        On iPhone: open the published site in Safari, then Share → Add to Home
+        Screen. Internet is required for translations. A public site is fine;
+        every visitor must supply their own key.
+      </p>
+    </dialog>
+    <dialog id="manual">
+      <h2>Copy manually</h2>
+      <p>
+        Your browser blocked clipboard access. Select the text below and choose
+        Copy.
+      </p>
+      <textarea
+        id="manual-text"
+        readonly
+        rows="8"
+        aria-label="Translation for manual copying"
+      ></textarea
+      ><button id="manual-close" class="primary">Done</button>
+    </dialog>
+    <div id="toast" role="status" aria-live="polite" hidden></div>
+  </body>
 </html>
