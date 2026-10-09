@@ -1,9 +1,7 @@
-# Saylo — simple GitHub upload
+# Saylo — Manus-backed personal translator
 
-This package deliberately uses no folders. Upload all the extracted files together to the root of your existing wechat-translator repository. Do not upload the ZIP itself or the outer extracted folder.
+Open https://saylo-xlertgdj.manus.space/ and sign in with your Manus account. This GitHub Pages site is the entry/migration page, not an AI proxy. No Google key is needed. The Manus service credentials are stored only on the hosted server, never in this repository.
 
-The website files are index.html, app.js, styles.css, manifest.webmanifest, icon.png and favicon.png. The two icon images belong alongside index.html in this version. The HTML and manifest have been adjusted accordingly.
+The personal service requires explicit account access. It retains Smart intent, Literal mode, all five tones, multiline chat formatting, tone comparison and copy controls. Recent translations are optionally stored on your device, not in the application's server database.
 
-After the files have uploaded, commit them to main. GitHub Pages is already configured on this repository. Open https://jeffidealab-bot.github.io/wechat-translator/ after the Pages deployment completes, then enter your own Gemini API key in API settings. Never put your key in the uploaded files.
-
-The app defaults to keeping the key in the current tab's memory. Remember key is optional and stores it unencrypted on your device. Translation requires internet and sends the text directly to Google. Smart intent and all five tones are included. Review important messages before sending.
+If you previously used the Gemini version, the entry page removes its saved Gemini key from this origin's browser storage. You can export your local history there, then import it in Settings on the new translator. That backup contains chat text: keep it private. Each device requires Manus sign-in. Add the new Manus URL to your phone's home screen instead of the old GitHub URL.
